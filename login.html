@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>Account — VOIDCLIENT</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:radial-gradient(circle at 50% 20%,#202020 0,transparent 42%),#080808;color:#fff;font-family:Arial,sans-serif}header{height:80px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}.logo{font-size:22px;font-weight:900;letter-spacing:3px;color:#fff;text-decoration:none}.logo span{color:#777}nav{display:flex;gap:28px}nav a{color:#999;text-decoration:none;font-size:12px}nav a:hover{color:white}main{min-height:calc(100vh - 160px);display:grid;place-items:center;padding:50px 20px}.card{width:min(100%,460px);padding:42px;background:#101010;border:1px solid #303030}.eyebrow{color:#777;font-size:10px;letter-spacing:4px}.card h1{font-size:clamp(36px,8vw,52px);letter-spacing:-2px;margin-top:18px}.intro{color:#999;font-size:14px;line-height:1.7;margin-top:14px}.choices{display:grid;gap:14px;margin-top:30px}.google-slot{min-height:44px}.google-placeholder{width:100%;padding:14px;background:#181818;border:1px solid #444;color:#eee;font-size:13px;cursor:pointer}.google-placeholder:hover,.guest:hover{border-color:#aaa}.guest{width:100%;padding:15px;background:#fff;border:1px solid #fff;color:#080808;font-weight:bold;cursor:pointer}.note{margin-top:24px;padding-top:20px;border-top:1px solid #292929;color:#777;font-size:11px;line-height:1.7}.note strong{color:#aaa}.message{min-height:20px;color:#aaa;font-size:12px;line-height:1.5;margin-top:14px}.profile{display:none;margin-top:26px;padding:18px;background:#171717;border:1px solid #333}.profile strong{display:block;font-size:16px;margin-bottom:7px}.profile span{color:#999;font-size:13px}.back{display:inline-block;margin-top:24px;color:#888;font-size:12px;text-decoration:none}.back:hover{color:white}footer{padding:25px 8%;border-top:1px solid #222;color:#666;font-size:11px}@media(max-width:600px){header{padding:0 6%;height:auto;min-height:75px;align-items:flex-start;flex-direction:column;justify-content:center;gap:16px}nav{gap:16px;flex-wrap:wrap}main{min-height:calc(100vh - 190px);padding:35px 16px}.card{padding:28px 22px}footer{padding:25px 6%}}
+</style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+<header><a class="logo" href="index.html">VOIDCLIENT<span>.</span></a><nav aria-label="Main navigation"><a href="index.html">HOME</a><a href="mods.html">MODS</a></nav></header>
+<main><section class="card" aria-labelledby="page-title"><div class="eyebrow">VOIDCLIENT ACCOUNT</div><h1 id="page-title">ENTER THE VOID.</h1><p class="intro">Choose how you want to continue. You can use Google sign-in or browse anonymously.</p><div class="choices" id="choices"><div class="google-slot" id="google-button"><button class="google-placeholder" id="google-setup" type="button">Continue with Google — setup required</button></div><button class="guest" id="guest-button" type="button">CONTINUE ANONYMOUSLY</button></div><p class="message" id="message" role="status" aria-live="polite">Google sign-in needs a site-specific Google OAuth client ID before it can be enabled.</p><div class="profile" id="profile"><strong id="profile-name"></strong><span id="profile-email"></span><button class="google-placeholder" id="change-account" type="button" style="margin-top:16px">Sign out / choose another option</button></div><div class="note"><strong>Privacy note:</strong> Anonymous mode is only saved in this browser. Google sign-in displays your basic account identity in this page; this static site has no server or protected account data. Never use client-side sign-in alone to protect private data.</div><a class="back" href="index.html">← Back to Voidclient</a></section></main>
+<footer>VOIDCLIENT · Account options</footer>
+<script>
+(() => {
+  // Replace this with a Google OAuth client ID configured for this site's origin.
+  const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  const choices = document.getElementById('choices');
+  const message = document.getElementById('message');
+  const profile = document.getElementById('profile');
+
+  document.getElementById('guest-button').addEventListener('click', () => {
+    localStorage.setItem('voidclientMode', 'anonymous');
+    sessionStorage.removeItem('voidclientGoogleProfile');
+    message.textContent = 'You are browsing anonymously on this device.';
+    choices.style.display = 'none';
+    profile.style.display = 'block';
+    document.getElementById('profile-name').textContent = 'Anonymous visitor';
+    document.getElementById('profile-email').textContent = 'No account connected';
+  });
+
+  document.getElementById('change-account').addEventListener('click', () => {
+    localStorage.removeItem('voidclientMode');
+    sessionStorage.removeItem('voidclientGoogleProfile');
+    profile.style.display = 'none';
+    choices.style.display = 'grid';
+    message.textContent = 'Choose Google sign-in or continue anonymously.';
+  });
+
+  function decodeJwtPayload(token) {
+    const part = token.split('.')[1];
+    const base64 = part.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(char => '%' + char.charCodeAt(0).toString(16).padStart(2, '0')).join('')));
+  }
+
+  function handleGoogleCredential(response) {
+    try {
+      const account = decodeJwtPayload(response.credential);
+      localStorage.removeItem('voidclientMode');
+      sessionStorage.setItem('voidclientGoogleProfile', JSON.stringify({name: account.name || 'Google user', email: account.email || ''}));
+      choices.style.display = 'none';
+      profile.style.display = 'block';
+      document.getElementById('profile-name').textContent = account.name || 'Google user';
+      document.getElementById('profile-email').textContent = account.email || '';
+      message.textContent = 'Signed in with Google for this browser session.';
+    } catch (error) {
+      message.textContent = 'Could not read the Google sign-in response. Please try again.';
+    }
+  }
+
+  const configured = GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.startsWith('YOUR_');
+  if (configured) {
+    const setupButton = document.getElementById('google-setup');
+    setupButton.textContent = 'Loading Google sign-in…';
+    const waitForGoogle = setInterval(() => {
+      if (!window.google?.accounts?.id) return;
+      clearInterval(waitForGoogle);
+      setupButton.remove();
+      google.accounts.id.initialize({client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, auto_select: false});
+      google.accounts.id.renderButton(document.getElementById('google-button'), {theme: 'filled_black', size: 'large', shape: 'rectangular', text: 'continue_with', width: 370});
+      message.textContent = 'Google sign-in is ready.';
+    }, 100);
+    setTimeout(() => { clearInterval(waitForGoogle); if (document.getElementById('google-setup')) message.textContent = 'Google sign-in could not load. Check the client ID, authorized site origin, and network connection.'; }, 10000);
+  } else {
+    document.getElementById('google-setup').addEventListener('click', () => {
+      message.textContent = 'To enable Google sign-in, add a Google OAuth client ID in this page and authorize https://karolinaszajdam-dev.github.io as a JavaScript origin.';
+    });
+  }
+})();
+</script>
+</body>
+</html>
