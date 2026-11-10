@@ -4,14 +4,192 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
-<title>Mods — VOIDCLIENT</title>
+<title>Your Mods — VOIDCLIENT</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:#080808;color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column}header{height:80px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222}.logo{font-size:22px;font-weight:900;letter-spacing:3px;color:#fff;text-decoration:none}.logo span{color:#777}nav{display:flex;gap:28px}nav a{color:#999;text-decoration:none;font-size:12px}nav a:hover{color:white}main{flex:1;display:grid;place-items:center;text-align:center;padding:70px 20px;background:radial-gradient(circle at 50% 45%,#202020 0,transparent 43%),#080808}.content{max-width:700px}.label{color:#777;font-size:10px;letter-spacing:4px}.content h1{font-size:clamp(55px,12vw,100px);letter-spacing:-6px;line-height:.95;margin-top:25px}.content h1 span{color:#666}.content p{max-width:440px;margin:25px auto 0;color:#888;font-size:14px;line-height:1.8}.status{display:inline-block;margin-top:32px;padding:12px 17px;border:1px solid #444;color:#aaa;font-size:10px;letter-spacing:3px}.back{display:inline-block;margin-top:35px;padding:14px 22px;background:#fff;color:#080808;text-decoration:none;font-size:11px;font-weight:bold}footer{padding:28px 8%;border-top:1px solid #222;color:#666;font-size:11px}@media(max-width:600px){header{padding:0 6%}.content h1{letter-spacing:-3px}footer{padding:25px 6%}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:#080808;color:#fff;font-family:Arial,sans-serif}
+header{min-height:80px;padding:0 8%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #222;background:#080808}
+.logo{font-size:22px;font-weight:900;letter-spacing:3px;color:#fff;text-decoration:none}.logo span{color:#777}
+nav{display:flex;gap:28px}nav a{color:#999;text-decoration:none;font-size:12px}nav a:hover{color:#fff}
+main{max-width:1100px;margin:0 auto;padding:70px 24px 100px}
+.eyebrow{color:#777;font-size:10px;letter-spacing:4px}
+h1{font-size:clamp(44px,8vw,76px);letter-spacing:-4px;line-height:1;margin-top:18px}
+.intro{max-width:650px;color:#999;font-size:14px;line-height:1.8;margin-top:18px}
+.notice{margin-top:25px;padding:16px 18px;background:#111;border:1px solid #333;color:#aaa;font-size:12px;line-height:1.7}
+.notice strong{color:#fff}
+.toolbar{margin-top:38px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.identity{color:#999;font-size:12px}.identity strong{color:#fff}
+button,.button{font:inherit;cursor:pointer}
+.action{border:1px solid #555;background:#fff;color:#080808;text-decoration:none;padding:13px 18px;font-size:11px;font-weight:bold;letter-spacing:1px;display:inline-block}
+.action:hover{background:#ccc}
+.secondary{background:#161616;color:#ddd;border:1px solid #444;padding:11px 14px;font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:24px}
+.empty{grid-column:1/-1;padding:44px 25px;border:1px dashed #383838;color:#777;text-align:center;font-size:13px;line-height:1.8}
+.card{min-width:0;background:#101010;border:1px solid #292929;padding:24px;overflow-wrap:anywhere}
+.card .filetype{color:#777;font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.card h2{font-size:24px;letter-spacing:-.5px;margin-top:20px}
+.card .description{color:#999;font-size:13px;line-height:1.7;margin-top:12px;white-space:pre-wrap}
+.meta{border-top:1px solid #2a2a2a;margin-top:22px;padding-top:15px;color:#777;font-size:11px;line-height:1.8}
+.meta strong{color:#bbb}.file-link{display:inline-block;margin-top:18px;color:#fff;font-size:11px;font-weight:bold;letter-spacing:1px;text-decoration:none;border:1px solid #444;padding:11px 14px}.file-link:hover{background:#fff;color:#080808}
+.remove{margin-top:12px;background:none;border:0;color:#888;text-decoration:underline;font-size:11px}.remove:hover{color:#fff}
+.modal-backdrop{position:fixed;inset:0;z-index:10;background:rgba(0,0,0,.82);display:grid;place-items:center;padding:20px}
+.modal{width:min(100%,480px);background:#101010;border:1px solid #383838;padding:30px}
+.modal h2{font-size:28px;letter-spacing:-1px;margin-top:12px}
+.modal p{color:#999;font-size:13px;line-height:1.7;margin-top:12px}
+.field{margin-top:19px}.field label{display:block;color:#aaa;font-size:11px;letter-spacing:1px;margin-bottom:8px}
+.field input,.field textarea{width:100%;background:#080808;color:#fff;border:1px solid #3a3a3a;padding:13px;font:inherit;font-size:13px;border-radius:0}
+.field textarea{min-height:120px;resize:vertical;line-height:1.6}.field input:focus,.field textarea:focus{outline:1px solid #aaa}
+.hint{color:#777;font-size:10px;line-height:1.6;margin-top:8px}
+.error{min-height:18px;color:#ff9b9b;font-size:12px;margin-top:12px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+.hidden{display:none!important}
+footer{padding:28px 8%;border-top:1px solid #222;color:#666;font-size:11px}
+@media(max-width:600px){header{padding:18px 6%;align-items:flex-start;gap:16px;flex-direction:column}nav{gap:20px}main{padding:48px 6% 75px}h1{letter-spacing:-2px}.modal{padding:24px}footer{padding:25px 6%}}
 </style>
 </head>
 <body>
 <header><a class="logo" href="index.html">VOIDCLIENT<span>.</span></a><nav aria-label="Main navigation"><a href="index.html">HOME</a><a href="login.html">ACCOUNT</a></nav></header>
-<main><div class="content"><div class="label">VOIDCLIENT MODS</div><h1>MODS<br><span>COMING SOON.</span></h1><p>The mods page is being prepared. Check back later for updates and releases.</p><div class="status">IN DEVELOPMENT</div><br><a class="back" href="index.html">BACK TO HOME</a></div></main>
-<footer>VOIDCLIENT · Mods</footer>
+<main>
+  <div class="eyebrow">COMMUNITY MODS</div>
+  <h1>YOUR MODS.</h1>
+  <p class="intro">Add a display name or nickname, then post a mod with its file, title, and description.</p>
+  <div class="notice"><strong>Local demo:</strong> This GitHub Pages site has no upload server. Your selected file stays in this browser and is not sent or published for other visitors. Mod posts are visible only in this browser; the file link works only while this page remains open.</div>
+  <div class="toolbar"><div class="identity">Posting as <strong id="display-name">—</strong> <button class="secondary" id="change-name" type="button">Change name</button></div><button class="action" id="open-post" type="button">+ POST MOD</button></div>
+  <section class="grid" id="mod-list" aria-label="Your mod posts"><div class="empty" id="empty-state">No mods posted yet.<br>Choose <strong>POST MOD</strong> to add one.</div></section>
+</main>
+<footer>VOIDCLIENT · Your Mods</footer>
+
+<div class="modal-backdrop" id="name-dialog" role="dialog" aria-modal="true" aria-labelledby="name-title">
+  <form class="modal" id="name-form">
+    <div class="eyebrow">DISPLAY NAME</div><h2 id="name-title">What should we call you?</h2>
+    <p>Use a nickname or alias—please don’t enter your real name. This name is saved only in this browser.</p>
+    <div class="field"><label for="nickname">YOUR NICKNAME</label><input id="nickname" name="nickname" maxlength="24" autocomplete="nickname" required placeholder="e.g. VoidBuilder"></div>
+    <div class="error" id="name-error" role="alert"></div>
+    <div class="modal-actions"><button class="action" type="submit">CONTINUE</button></div>
+  </form>
+</div>
+
+<div class="modal-backdrop hidden" id="post-dialog" role="dialog" aria-modal="true" aria-labelledby="post-title">
+  <form class="modal" id="post-form">
+    <div class="eyebrow">NEW COMMUNITY MOD</div><h2 id="post-title">Post a mod.</h2>
+    <div class="field"><label for="mod-name">MOD NAME</label><input id="mod-name" name="mod-name" maxlength="60" required placeholder="Name your mod"></div>
+    <div class="field"><label for="mod-description">DESCRIPTION</label><textarea id="mod-description" name="description" maxlength="600" required placeholder="What does your mod do?"></textarea><div class="hint">Up to 600 characters. Don’t include private information.</div></div>
+    <div class="field"><label for="mod-file">IMPORT MOD FILE</label><input id="mod-file" name="file" type="file" required><div class="hint">Choose a file up to 50 MB. It is not uploaded; it stays on this device.</div></div>
+    <div class="error" id="post-error" role="alert"></div>
+    <div class="modal-actions"><button class="secondary" id="cancel-post" type="button">CANCEL</button><button class="action" type="submit">ADD MOD</button></div>
+  </form>
+</div>
+
+<script>
+(() => {
+  const nameDialog = document.getElementById('name-dialog');
+  const postDialog = document.getElementById('post-dialog');
+  const nameForm = document.getElementById('name-form');
+  const postForm = document.getElementById('post-form');
+  const nicknameInput = document.getElementById('nickname');
+  const displayName = document.getElementById('display-name');
+  const list = document.getElementById('mod-list');
+  const emptyState = document.getElementById('empty-state');
+  const maxBytes = 50 * 1024 * 1024;
+  let nickname = localStorage.getItem('voidclientDisplayName') || '';
+  let posts = [];
+
+  function showNameDialog() {
+    nicknameInput.value = nickname;
+    nameDialog.classList.remove('hidden');
+    setTimeout(() => nicknameInput.focus(), 0);
+  }
+  function updateName() {
+    displayName.textContent = nickname || 'Choose a nickname';
+    if (!nickname) showNameDialog();
+  }
+  updateName();
+
+  nameForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const value = nicknameInput.value.trim();
+    if (!value) {
+      document.getElementById('name-error').textContent = 'Please enter a nickname.';
+      return;
+    }
+    nickname = value;
+    localStorage.setItem('voidclientDisplayName', nickname);
+    nameDialog.classList.add('hidden');
+    document.getElementById('name-error').textContent = '';
+    updateName();
+  });
+
+  document.getElementById('change-name').addEventListener('click', showNameDialog);
+  document.getElementById('open-post').addEventListener('click', () => {
+    if (!nickname) { showNameDialog(); return; }
+    postForm.reset();
+    document.getElementById('post-error').textContent = '';
+    postDialog.classList.remove('hidden');
+    document.getElementById('mod-name').focus();
+  });
+  document.getElementById('cancel-post').addEventListener('click', () => postDialog.classList.add('hidden'));
+
+  function addText(parent, tag, className, value) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    element.textContent = value;
+    parent.appendChild(element);
+    return element;
+  }
+
+  function renderPost(post) {
+    const card = document.createElement('article');
+    card.className = 'card';
+    addText(card, 'div', 'filetype', post.file.name);
+    addText(card, 'h2', '', post.title);
+    addText(card, 'p', 'description', post.description);
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const author = document.createElement('div');
+    author.append('Posted by ');
+    const authorName = document.createElement('strong');
+    authorName.textContent = post.author;
+    author.appendChild(authorName);
+    meta.appendChild(author);
+    addText(meta, 'div', '', 'File size: ' + (post.file.size / 1024 / 1024).toFixed(2) + ' MB');
+    card.appendChild(meta);
+    const link = document.createElement('a');
+    link.className = 'file-link';
+    link.href = URL.createObjectURL(post.file);
+    link.download = post.file.name;
+    link.textContent = 'SAVE FILE ↗';
+    card.appendChild(link);
+    const remove = document.createElement('button');
+    remove.className = 'remove';
+    remove.type = 'button';
+    remove.textContent = 'Remove post';
+    remove.addEventListener('click', () => {
+      URL.revokeObjectURL(link.href);
+      posts = posts.filter(item => item.id !== post.id);
+      card.remove();
+      emptyState.classList.toggle('hidden', posts.length > 0);
+    });
+    card.appendChild(remove);
+    list.appendChild(card);
+  }
+
+  postForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const file = document.getElementById('mod-file').files[0];
+    const title = document.getElementById('mod-name').value.trim();
+    const description = document.getElementById('mod-description').value.trim();
+    const error = document.getElementById('post-error');
+    if (!file) { error.textContent = 'Choose a file to import.'; return; }
+    if (file.size > maxBytes) { error.textContent = 'This demo accepts files up to 50 MB.'; return; }
+    if (!title || !description) { error.textContent = 'Enter a mod name and description.'; return; }
+    const post = {id: Date.now() + Math.random(), file, title, description, author: nickname};
+    posts.push(post);
+    emptyState.classList.add('hidden');
+    renderPost(post);
+    postDialog.classList.add('hidden');
+    postForm.reset();
+  });
+})();
+</script>
 </body>
 </html>
